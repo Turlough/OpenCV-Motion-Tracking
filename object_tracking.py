@@ -1,6 +1,6 @@
 import numpy as np
 import cv2
-import mjpg
+import mjpg 
 
 
 url = 'http://172.16.92.210:8081' 
@@ -37,12 +37,16 @@ def callback(jpg):
         rect = np.array(corners)
 
         # Overlays each rectangle perimeter on the image
-        cv2.rectangle(image_np, corners[0], corners[2], boxColor, borderThickness)
+        # cv2.rectangle(image_np, corners[0], corners[2], boxColor, borderThickness)
+
+        # Ovelays the contour around the moving area
+        cv2.polylines(image_np, [c], False, boxColor, borderThickness)
         
         # Use either the original contour or bounding rectangle. Comment out whichever.
         
         # polygons.append(c) # Use the original contour as mask
         polygons.append(rect) # Use the bounding rectangle as mask
+
 
     mask = np.zeros_like(image_np)   
     cv2.fillPoly(mask, polygons, (255, 255, 255))
@@ -54,8 +58,6 @@ def callback(jpg):
 
     if cv2.waitKey(25) & 0xFF == ord('q'):
         cv2.destroyAllWindows()
-        cap.release()
-
 
 
 if __name__ == '__main__':
